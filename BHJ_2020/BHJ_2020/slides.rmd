@@ -1,0 +1,349 @@
+---
+title: "Quasi-Experimental Shift-Share Research Design"
+author: "Boryusak, Hull, Jaravel. Forthcoming Restud 2021"
+date: "Antoine Mayerowitz"
+bibliography: bib.bib
+output:
+  revealjs::revealjs_presentation:
+    transition: fade
+    theme: white
+    reveal_plugins: ["menu", "chalkboard"]
+    self_contained: false
+    includes:
+       in_header: ../shared/revealjs_header.html
+    reveal_options:
+      slideNumber: true
+      chalkboard:
+        theme: whiteboard
+      width: 1280
+      height: 720
+  beamer_presentation:
+    template: ../themes/beamer.tex
+    fonttheme: professionalfonts
+    keep_tex: no
+    toc: true
+---
+# Innovation
+<style type="text/css">
+  .reveal p {
+    text-align: left;
+  }
+  .reveal {
+    font-size: 2rem;
+  }
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Beforehand, in @goldsmith2020bartik, we discussed an approach of SSIV where
+identification lays on _shares exogeneity_.
+Today we will discuss an alternative approach where identification comes from
+the _shocks_ ( _i.e. the shifts_ ).
+
+At the end of the day, the point estimates
+remains the same. However, your narrative and your tests will be quite
+different.
+
+# Roadmap
+
+1. [GPSS & BHJ](#gpssvbhj)
+2. [SSIV](#SSIV)
+3. [BHJ Baseline](#BHJ)
+4. [BHJ Extensions](#EXT)
+5. [Inference & testing](#inference)
+6. [Practical example](#ADH)
+7. [Toolbox](#toolbox)
+
+# SSIV: GPSS & BHJ {#gpssvbhj}
+
+Simply put, the method is based on the idea that your population of interest has
+_exogenous exposure_ to aggregate shocks.
+
+:::{class="fragment fade-in"}
+But BHJ argue that you could also have _endogenous exposure_ and _quasi random shocks_
+conditional on shock level controls and average exposure.
+:::
+
+
+# Key intuition?
+<div style="display: flex; justify-content: center">   
+<blockquote class="twitter-tweet" data-conversation="none" data-dnt="true" data-theme="dark"><p lang="en" dir="ltr">[4/n] To see the key intuition, focus on the equivalence result in our Proposition 1. Identification can &quot;come from&quot; the shock, because SSIV regression coefficients can be obtained from an IV regression estimated at the level of shocks. <a href="https://t.co/RnYBQA5TaL">pic.twitter.com/RnYBQA5TaL</a></p>&mdash; Xavier Jaravel (@XJaravel) <a href="https://twitter.com/XJaravel/status/1299359648823287809?ref_src=twsrc%5Etfw">August 28, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<div>
+
+
+# SSIV {#SSIV}
+
+We want to estimate $\beta$ from the causal relationship:
+
+$$
+y_l = \beta x_l + \gamma' w_l + \varepsilon_l
+$$
+
+for a set of observations $l$. Where $x_l$ is an endogenous variable and $w_l$ a set of controls.
+
+The methods leverages the following instrument:
+$$
+z_l = \sum_n s_{ln}g_n
+$$
+
+where $s_{ln} \in [0, 1]$ are _exposure shares_ and $g_n$ are _shocks_.
+
+<small>$s_{ln}$ are often defined relative to $l$, such that $\sum_n s_{ln} =1$ </small>
+
+
+# Example: ADH (2013)
+$$
+\underbrace{y_l}_{\text{wages, empl, etc}} = \beta \underbrace{x_l}_{\text{growth of import comp.}} + \varepsilon_l
+$$
+With
+$$
+z_l = \sum_n \underbrace{s_{ln}}_{\text{lagged empl. share}} \;\; \underbrace{g_{n}}_{\text{growth CH Xports to europe}} 
+$$
+
+
+# BHJ {#BHJ}
+By the Frisch-Waugh-Lovell theorem, the estimator can be written as the coefficient of a bivariate IV regression of outcome and treatment residuals:
+
+$$
+\hat{\beta} = 
+\frac{\sum_l z_l y_l^{\perp}}
+{\sum_l z_l x_l^{\perp}}
+=
+\frac{Cov(z_l, y_l^{\perp})}{Cov(z_l, x_l^{\perp})}
+=
+\frac{\sum_l \sum_n s_{ln} g_n y_l^{\perp}}
+{\sum_l \sum_n s_{ln} g_n x_l^{\perp}}\tag{4'}
+$$
+
+Where $v^{\perp}$ is the residual from regressing $v_l$ on controls $w_l$.
+
+<small>
+Note: We abstract from $e_l$ and we stay in the unweighted case in this
+presentation as it is not crucial to the argument.
+When needed, we define it to $e_l = 1/L$ such that $\sum_l e_l = 1$.
+</small>
+
+
+# BHJ: Proposition 1
+
+:::{.r-stack}
+
+:::{class="fragment fade-out"}
+> The SSIV estimator equals the second-stage coefficient from a $s_n$-weighted shock-level
+  IV regression that uses the shocks $g_n$ as the instrument.
+:::
+
+:::{class="fragment fade-in-then-out"}
+$$
+\hat{\beta}
+=
+\frac{\frac{1}{L}\sum_l \sum_n s_{ln} g_n y_l^{\perp}}
+{\frac{1}{L} \sum_l \sum_n s_{ln} g_n x_l^{\perp}}
+=
+\frac{\sum_n g_n \frac{1}{L} \sum_l s_{ln}  y_l^{\perp}}
+{\sum_n g_n \frac{1}{L} \sum_l s_{ln}  x_l^{\perp}}  \tag{7'}
+$$
+:::
+
+:::{class="fragment fade-in"}
+$$
+\hat{\beta}
+=
+\frac{\frac{1}{L}\sum_l \sum_n s_{ln} g_n y_l^{\perp}}
+{\frac{1}{L} \sum_l \sum_n s_{ln} g_n x_l^{\perp}}
+=
+\frac{\sum_n g_n  s_{n}  \bar{y}_n^{\perp}}
+{\sum_n g_n s_{n}  \bar{x}_n^{\perp}} \tag{7'}
+$$
+:::
+:::
+
+:::{.fragment .fade-in}
+Where $s_n = \frac{1}{L} \sum_l s_{ln}$ is the average importance of shock (think sector, country of origin) $n$.
+:::
+
+:::{.fragment .fade-in}
+And $\bar{v}_n = \frac{\sum_l s_{ln} v_{l}}{\sum_l s_{ln}}$ is an exposure-weighted average of $v_l$.
+:::
+
+# BHJ: Assumptions {#here}
+
+:::{.fragment .fade-in}
+- __A1__ Quasi random shock assignment $\mathbb{E}[g_n|\bar{\varepsilon}, s] = \mu$
+  - Each shock has the same expected value, conditional on shock level
+        unobservable $\hat{\varepsilon}_n$ and average exposure $s_n$.
+  - <small> "In the labor supply example this assumption would mean that import
+    tariffs should not have been chosen strategically, based on labor supply
+    trend, or in a way that is correlated with such trend" </small>
+:::
+
+
+:::{.fragment .fade-in}
+- __A2__ Many uncorrelated shocks $\mathbb{E}[\sum_n s_n^2] \rightarrow 0$ and
+  $Cov(g_n, g_n' | \bar{\varepsilon}, s) = 0$
+  - First means Herfindahl index of average shock exposure converges to zero (implies $N\rightarrow \infty$)
+  - Second means shocks are mutually uncorrelated given the unobservables.
+  - imply $\sum_n s_n g_n \bar{\varepsilon}_n \xrightarrow{p} 0$
+:::
+
+:::{.fragment .fade-in}
+> SSIV relevance generaly arises when large N and each region $l$ is specialized in a subset of 
+  industries $n$.
+:::
+
+# Extensions {#EXT}
+>- Conditional Quasi-random Assignment
+>- Estimated Shocks
+>- Panel Data
+>- Incomplete shares
+
+# Conditional Quasi-random Assignment
+You can relax assumptions __A1__ and have
+$$
+\mathbb{E}[g_n|\bar{\varepsilon}, \color{indianred}{q}, s] = \color{indianred}{q'_n} \mu \;\;\forall n
+$$
+
+:::{.fragment .fade-in}
+Example: Shocks are _as good as randomly_ assigned within a set of clusters with
+non random cluster-average shocks. Then $q_n$ could be a collection of cluster
+dummies. In the labor supply example, import tariffs may vary systematically across
+groups of industries with similar labor intensity, but random within each group.
+Can also take into account serial correlation.
+:::
+
+:::{.fragment .fade-in}
+Implementation: Use an exposure weighted-vector of shock-level controls: $\tilde{w_l} = \sum_n s_{ln} q_n$
+:::
+
+# Estimated shocks
+>- Shocks are often equilibirum objects $\neq$ quasi-randomly assigned.
+  One can use a proxy shock $g_n = \sum_l \omega_{ln} g_{ln}$ but it may be biased
+  because aggregated shock also includes local shocks.
+>- Solution can be a "Leave one-out" aggregation.
+>- If spatial correlation, you may use distant regions.
+>- LOO correction doesn't really matter in practice when $L,N \rightarrow \infty$.
+
+# Panel data {#panel}
+
+>- Consistent if $L,N \rightarrow \infty$ and even if $N = 1,\; T \rightarrow \infty$.
+>- Unit fixed effects purge time-invariant unobservable &#128077;
+>- But remove the time-invariant part of the shocks only if shares are time
+   invariant &#128078;
+>- Time FEs purge period-specific unobservables only if exposure shares add up
+   to one. Otherwise, one must interacts period FEs with sum of exposures shares
+   $S_l$
+>- In any case, one may want to use a first-difference in both observations and shocks specification to account
+   for shock fixed effect and maximizing first stage:
+$$
+\Delta y_{lt} = \beta \Delta x_{lt} + \Delta w_{lt}' \gamma + \Delta\varepsilon_{lt}
+$$
+  With
+$$
+z_{lt, FD} = \sum_n s_{ln, t-1}\Delta g_{nt}
+$$
+
+# Inference & testing {#inference}
+
+>- __Proposition 5__: The conventional heteroskedasticity-robust SE for $\hat{\beta}$ of the second stage
+   equation $$\bar{y}_n^\perp = \alpha + \beta \bar{x}_n^\perp + q'_n \delta + \bar{\varepsilon}_n^\perp \tag{10}$$ is valid.
+>- First stage F-stat obtained as squared t-stat. If multiple instruments look at Appendix A.10
+>- __Falsification test__: One may regress a proxy $r_l$ for the unobserved residuals
+  $\varepsilon_l$ on the instrument $z_l$. Example of $r_l$ could be lagged observations of the outcome,
+  or some characteristics realized prior to the shocks.
+  
+  
+# In practice {#ADH}
+
+3 cases in the literature:
+
+>- Set of shocks which is itself an instrument. For example, the $g_n$ in $z_l$
+   correspond to a set of observed growth rates that could be plausibly thought as
+   being randomly assigned to many industries. Ex. ADH (2013)
+>- Researcher does not directly observe a large set of shocks but can imagine an
+   underlying set of $g_n$ that if observed, would be a useful instrument. Ex.
+   Bartik -@bartik1991benefits, Card -@card2001immigrant, Card(2009)
+>- The $g_n$ cannot be viewed as an instrument. Because either it is not possible
+   that these shocks are randomly assigned, even conditionaly of shock-level
+   observables, or because there are too few shocks. In this case, identification
+   may follow from the exogeneity of the shares, as suggested by GPSS (2020)
+   
+# In practice: blueprint
+<ol>
+  <li>Narrative justification for the quasi random assignments of shocks (BHJ: 6.2.1)
+    <ul>
+    <li>Here you try to justify Assumption 1 & 2. Assumption 3 & 4 in the case of
+    conditional quasi-random shocks. Assumption 5 or 6 instead of 4 in the case of serial
+    correlation or cross correlation.</li>
+    </ul>
+  </li>
+  <li> Compute properties of shocks and shares. (BHJ: Table 1)
+    <ul>
+      <li>Show moments of $g_{nt}$ weighted by $s_{nt}$.</li>
+      <li>Show inverse Herfindahl of weights, it is your _effective sample size_. You want it large.</li>
+    </ul>
+  </li>
+  <li>Prove shocks are uncorrelated and choose the right clustering.
+    <ul><li>Read Mostly Harmless Econometrics [-@angrist2008mostly] Ch. 8.2 to find the right clustering level.</li></ul>
+  </li>
+  <li>Falsification tests (BHJ: 6.2.3 + Table 3)
+    <ul>
+      <li>Regress potential proxies for residual on the instrument $z_l$</li>
+      <li>Regress potential industry level confounders on the shocks</li>
+      <li>"Pre-trend" analysis using lagged outcome on the instrument</li> 
+    </ul>
+  </li>
+</ol>
+
+# ADH: Setup
+
+Causal effect of rising import penetration from China on U.S. local labor market.
+
+>- 722 commuting zones $l$
+>- 397 manufacturing industries $n$
+>- 2 periods $t$, 1990-2000 and 2000-2007
+>- $y_{lt}$ change in total manufacturing employment as percentage of working-age
+   population in $l$ at $t$.
+>- $x_{lt}$ local exposure to the growth of imports from China.
+>- $w_{lt}$ start-of-period measures of labor force demographics, period FEs, Region FEs, start-of-period total manufacturing share.
+
+# ADH: Justification
+An ideal experiment would generate random variation in the growth of imports from
+China across industries. One could imagine random variation in industry-specific
+productivities in China. This would yield a set of observed productivity change
+that could satisfy __Assumption 1__.
+
+
+__Assumption 2__ would require that shocks are idiosyncratic along many industries $n$,
+with small average exposure to each shocks across commuting zones $l$.
+
+> <small> &#x26A0; However one could argue that shocks are still non random (think China's factor
+endowment biased toward low-skill industries which could have different employment
+trend). -> Use falsification tests.</small>
+
+# ADH: Shocks and shares 
+<iframe data-src="https://arxiv.org/pdf/1806.01221.pdf#page=36&pagemode=none&zoom=page-width" width="100%" height="600px"></iframe>
+
+# ADH: Clustering
+<iframe data-src="https://arxiv.org/pdf/1806.01221.pdf#page=37&pagemode=none&zoom=page-width" width="100%" height="600px"></iframe>
+
+# ADH: Falsification
+<iframe data-src="https://arxiv.org/pdf/1806.01221.pdf#page=38&pagemode=none&zoom=page-width" width="100%" height="600px"></iframe>
+
+# ADH: Estimate
+<iframe data-src="https://arxiv.org/pdf/1806.01221.pdf#page=39&pagemode=none&zoom=page-width" width="100%" height="600px"></iframe>
+
+# Toolbox {#toolbox}
+
+- `ssaggregate` on Stata which constructs $\bar{y}_n^\perp,\; \bar{x}_n^\perp$ and $s_n$.
+  - ~ 170 lines of code, so it should be implemented quickly in any other language. (This is a sidenote for me)
+- [Reproducing code](https://github.com/borusyak/shift-share)
+
+
+# Thanks!
+
+# References
+[Kirill Boryusak UCL Slides, that he himself borrowed from Peter Hull](https://www.google.com/url?q=https%3A%2F%2Fwww.dropbox.com%2Fs%2Fbqqkvvxe27e5mya%2Fshiftshare.pdf%3Fraw%3D1&sa=D&sntz=1&usg=AFQjCNGkKSUW0OlCM1f_Vn2XXW7mx9g-4A)
+
+

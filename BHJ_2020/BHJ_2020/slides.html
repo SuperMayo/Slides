@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Boryusak, Hull, Jaravel. Forthcoming Restud 2021" />
+  <title>Quasi-Experimental Shift-Share Research Design</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="slides_files/reveal.js-4.1/dist/reset.css">
+  <link rel="stylesheet" href="slides_files/reveal.js-4.1/dist/reveal.css"/>
+
+
+
+<link rel="stylesheet" href="slides_files/reveal.js-4.1/dist/theme/white.css" id="theme">
+
+
+<!-- some tweaks to reveal css -->
+<style type="text/css">
+	.reveal h1 { font-size: 2.0em; }
+	.reveal h2 { font-size: 1.5em;  }
+	.reveal h3 { font-size: 1.25em;	}
+	.reveal h4 { font-size: 1em;	}
+	
+	.reveal .slides>section,
+	.reveal .slides>section>section {
+		padding: 0px 0px;
+	}
+	
+		
+
+	.reveal table {
+		border-width: 1px;
+		border-spacing: 2px;
+		border-style: dotted;
+		border-color: gray;
+		border-collapse: collapse;
+		font-size: 0.7em;
+	}
+	
+	.reveal table th {
+		border-width: 1px;
+		padding-left: 10px;
+		padding-right: 25px;
+		font-weight: bold;
+		border-style: dotted;
+		border-color: gray;
+	}
+	
+	.reveal table td {
+		border-width: 1px;
+		padding-left: 10px;
+		padding-right: 25px;
+		border-style: dotted;
+		border-color: gray;
+	}
+	
+	.reveal .slide-menu-button {
+		left: 105px !important;
+	}
+</style>
+
+<style type="text/css">code{white-space: pre;}</style>
+
+
+    <link rel="stylesheet" type="text/css"  href="https://rawcdn.githack.com/SuperMayo/reveal.js/796491eb48b445cf5196743b48e359cc8c467303/dist/theme/clean.css">
+    <script src="slides_files/header-attrs-2.7/header-attrs.js"></script>
+    <link href="slides_files/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+    <link href="slides_files/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Quasi-Experimental Shift-Share Research Design</h1>
+    <h2 class="author">Boryusak, Hull, Jaravel. Forthcoming Restud 2021</h2>
+    <h3 class="date">Antoine Mayerowitz</h3>
+</section>
+
+<section id="innovation" class="title-slide slide level1">
+<h1>Innovation</h1>
+<style type="text/css">
+  .reveal p {
+    text-align: left;
+  }
+  .reveal {
+    font-size: 2rem;
+  }
+</style>
+<p>Beforehand, in <span class="citation" data-cites="goldsmith2020bartik">Goldsmith-Pinkham, Sorkin, and Swift (2020)</span>, we discussed an approach of SSIV where identification lays on <em>shares exogeneity</em>. Today we will discuss an alternative approach where identification comes from the <em>shocks</em> ( <em>i.e. the shifts</em> ).</p>
+<p>At the end of the day, the point estimates remains the same. However, your narrative and your tests will be quite different.</p>
+</section>
+
+<section id="roadmap" class="title-slide slide level1">
+<h1>Roadmap</h1>
+<ol type="1">
+<li><a href="#/gpssvbhj">GPSS &amp; BHJ</a></li>
+<li><a href="#/SSIV">SSIV</a></li>
+<li><a href="#/BHJ">BHJ Baseline</a></li>
+<li><a href="#/EXT">BHJ Extensions</a></li>
+<li><a href="#/inference">Inference &amp; testing</a></li>
+<li><a href="#/ADH">Practical example</a></li>
+<li><a href="#/toolbox">Toolbox</a></li>
+</ol>
+</section>
+
+<section id="gpssvbhj" class="title-slide slide level1">
+<h1>SSIV: GPSS &amp; BHJ</h1>
+<p>Simply put, the method is based on the idea that your population of interest has <em>exogenous exposure</em> to aggregate shocks.</p>
+<div class="fragment fade-in">
+<p>But BHJ argue that you could also have <em>endogenous exposure</em> and <em>quasi random shocks</em> conditional on shock level controls and average exposure.</p>
+</div>
+</section>
+
+<section id="key-intuition" class="title-slide slide level1">
+<h1>Key intuition?</h1>
+<div style="display: flex; justify-content: center">
+<blockquote class="twitter-tweet" data-conversation="none" data-dnt="true" data-theme="dark">
+<p lang="en" dir="ltr">
+[4/n] To see the key intuition, focus on the equivalence result in our Proposition 1. Identification can “come from” the shock, because SSIV regression coefficients can be obtained from an IV regression estimated at the level of shocks. <a href="https://t.co/RnYBQA5TaL">pic.twitter.com/RnYBQA5TaL</a>
+</p>
+— Xavier Jaravel (<span class="citation" data-cites="XJaravel">(<strong>XJaravel?</strong>)</span>) <a href="https://twitter.com/XJaravel/status/1299359648823287809?ref_src=twsrc%5Etfw">August 28, 2020</a>
+</blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<div>
+
+
+</section>
+
+<section id="SSIV" class="title-slide slide level1">
+<h1>SSIV</h1>
+<p>We want to estimate <span class="math inline">\(\beta\)</span> from the causal relationship:</p>
+<p><span class="math display">\[
+y_l = \beta x_l + \gamma&#39; w_l + \varepsilon_l
+\]</span></p>
+<p>for a set of observations <span class="math inline">\(l\)</span>. Where <span class="math inline">\(x_l\)</span> is an endogenous variable and <span class="math inline">\(w_l\)</span> a set of controls.</p>
+<p>The methods leverages the following instrument: <span class="math display">\[
+z_l = \sum_n s_{ln}g_n
+\]</span></p>
+<p>where <span class="math inline">\(s_{ln} \in [0, 1]\)</span> are <em>exposure shares</em> and <span class="math inline">\(g_n\)</span> are <em>shocks</em>.</p>
+<p><small><span class="math inline">\(s_{ln}\)</span> are often defined relative to <span class="math inline">\(l\)</span>, such that <span class="math inline">\(\sum_n s_{ln} =1\)</span> </small></p>
+</section>
+
+<section id="example-adh-2013" class="title-slide slide level1">
+<h1>Example: ADH (2013)</h1>
+<p><span class="math display">\[
+\underbrace{y_l}_{\text{wages, empl, etc}} = \beta \underbrace{x_l}_{\text{growth of import comp.}} + \varepsilon_l
+\]</span> With <span class="math display">\[
+z_l = \sum_n \underbrace{s_{ln}}_{\text{lagged empl. share}} \;\; \underbrace{g_{n}}_{\text{growth CH Xports to europe}} 
+\]</span></p>
+</section>
+
+<section id="BHJ" class="title-slide slide level1">
+<h1>BHJ</h1>
+<p>By the Frisch-Waugh-Lovell theorem, the estimator can be written as the coefficient of a bivariate IV regression of outcome and treatment residuals:</p>
+<p><span class="math display">\[
+\hat{\beta} = 
+\frac{\sum_l z_l y_l^{\perp}}
+{\sum_l z_l x_l^{\perp}}
+=
+\frac{Cov(z_l, y_l^{\perp})}{Cov(z_l, x_l^{\perp})}
+=
+\frac{\sum_l \sum_n s_{ln} g_n y_l^{\perp}}
+{\sum_l \sum_n s_{ln} g_n x_l^{\perp}}\tag{4&#39;}
+\]</span></p>
+<p>Where <span class="math inline">\(v^{\perp}\)</span> is the residual from regressing <span class="math inline">\(v_l\)</span> on controls <span class="math inline">\(w_l\)</span>.</p>
+<p><small> Note: We abstract from <span class="math inline">\(e_l\)</span> and we stay in the unweighted case in this presentation as it is not crucial to the argument. When needed, we define it to <span class="math inline">\(e_l = 1/L\)</span> such that <span class="math inline">\(\sum_l e_l = 1\)</span>. </small></p>
+</section>
+
+<section id="bhj-proposition-1" class="title-slide slide level1">
+<h1>BHJ: Proposition 1</h1>
+<div class="r-stack">
+<div class="fragment fade-out">
+<blockquote>
+<p>The SSIV estimator equals the second-stage coefficient from a <span class="math inline">\(s_n\)</span>-weighted shock-level IV regression that uses the shocks <span class="math inline">\(g_n\)</span> as the instrument.</p>
+</blockquote>
+</div>
+<div class="fragment fade-in-then-out">
+<p><span class="math display">\[
+\hat{\beta}
+=
+\frac{\frac{1}{L}\sum_l \sum_n s_{ln} g_n y_l^{\perp}}
+{\frac{1}{L} \sum_l \sum_n s_{ln} g_n x_l^{\perp}}
+=
+\frac{\sum_n g_n \frac{1}{L} \sum_l s_{ln}  y_l^{\perp}}
+{\sum_n g_n \frac{1}{L} \sum_l s_{ln}  x_l^{\perp}}  \tag{7&#39;}
+\]</span></p>
+</div>
+<div class="fragment fade-in">
+<p><span class="math display">\[
+\hat{\beta}
+=
+\frac{\frac{1}{L}\sum_l \sum_n s_{ln} g_n y_l^{\perp}}
+{\frac{1}{L} \sum_l \sum_n s_{ln} g_n x_l^{\perp}}
+=
+\frac{\sum_n g_n  s_{n}  \bar{y}_n^{\perp}}
+{\sum_n g_n s_{n}  \bar{x}_n^{\perp}} \tag{7&#39;}
+\]</span></p>
+</div>
+</div>
+<div class="fragment fade-in">
+<p>Where <span class="math inline">\(s_n = \frac{1}{L} \sum_l s_{ln}\)</span> is the average importance of shock (think sector, country of origin) <span class="math inline">\(n\)</span>.</p>
+</div>
+<div class="fragment fade-in">
+<p>And <span class="math inline">\(\bar{v}_n = \frac{\sum_l s_{ln} v_{l}}{\sum_l s_{ln}}\)</span> is an exposure-weighted average of <span class="math inline">\(v_l\)</span>.</p>
+</div>
+</section>
+
+<section id="here" class="title-slide slide level1">
+<h1>BHJ: Assumptions</h1>
+<div class="fragment fade-in">
+<ul>
+<li><strong>A1</strong> Quasi random shock assignment <span class="math inline">\(\mathbb{E}[g_n|\bar{\varepsilon}, s] = \mu\)</span>
+<ul>
+<li>Each shock has the same expected value, conditional on shock level unobservable <span class="math inline">\(\hat{\varepsilon}_n\)</span> and average exposure <span class="math inline">\(s_n\)</span>.</li>
+<li><small> “In the labor supply example this assumption would mean that import tariffs should not have been chosen strategically, based on labor supply trend, or in a way that is correlated with such trend” </small></li>
+</ul></li>
+</ul>
+</div>
+<div class="fragment fade-in">
+<ul>
+<li><strong>A2</strong> Many uncorrelated shocks <span class="math inline">\(\mathbb{E}[\sum_n s_n^2] \rightarrow 0\)</span> and <span class="math inline">\(Cov(g_n, g_n&#39; | \bar{\varepsilon}, s) = 0\)</span>
+<ul>
+<li>First means Herfindahl index of average shock exposure converges to zero (implies <span class="math inline">\(N\rightarrow \infty\)</span>)</li>
+<li>Second means shocks are mutually uncorrelated given the unobservables.</li>
+<li>imply <span class="math inline">\(\sum_n s_n g_n \bar{\varepsilon}_n \xrightarrow{p} 0\)</span></li>
+</ul></li>
+</ul>
+</div>
+<div class="fragment fade-in">
+<blockquote>
+<p>SSIV relevance generaly arises when large N and each region <span class="math inline">\(l\)</span> is specialized in a subset of industries <span class="math inline">\(n\)</span>.</p>
+</blockquote>
+</div>
+</section>
+
+<section id="EXT" class="title-slide slide level1">
+<h1>Extensions</h1>
+<ul>
+<li class="fragment">Conditional Quasi-random Assignment</li>
+<li class="fragment">Estimated Shocks</li>
+<li class="fragment">Panel Data</li>
+<li class="fragment">Incomplete shares</li>
+</ul>
+</section>
+
+<section id="conditional-quasi-random-assignment" class="title-slide slide level1">
+<h1>Conditional Quasi-random Assignment</h1>
+<p>You can relax assumptions <strong>A1</strong> and have <span class="math display">\[
+\mathbb{E}[g_n|\bar{\varepsilon}, \color{indianred}{q}, s] = \color{indianred}{q&#39;_n} \mu \;\;\forall n
+\]</span></p>
+<div class="fragment fade-in">
+<p>Example: Shocks are <em>as good as randomly</em> assigned within a set of clusters with non random cluster-average shocks. Then <span class="math inline">\(q_n\)</span> could be a collection of cluster dummies. In the labor supply example, import tariffs may vary systematically across groups of industries with similar labor intensity, but random within each group. Can also take into account serial correlation.</p>
+</div>
+<div class="fragment fade-in">
+<p>Implementation: Use an exposure weighted-vector of shock-level controls: <span class="math inline">\(\tilde{w_l} = \sum_n s_{ln} q_n\)</span></p>
+</div>
+</section>
+
+<section id="estimated-shocks" class="title-slide slide level1">
+<h1>Estimated shocks</h1>
+<ul>
+<li class="fragment">Shocks are often equilibirum objects <span class="math inline">\(\neq\)</span> quasi-randomly assigned. One can use a proxy shock <span class="math inline">\(g_n = \sum_l \omega_{ln} g_{ln}\)</span> but it may be biased because aggregated shock also includes local shocks.</li>
+<li class="fragment">Solution can be a “Leave one-out” aggregation.</li>
+<li class="fragment">If spatial correlation, you may use distant regions.</li>
+<li class="fragment">LOO correction doesn’t really matter in practice when <span class="math inline">\(L,N \rightarrow \infty\)</span>.</li>
+</ul>
+</section>
+
+<section id="panel" class="title-slide slide level1">
+<h1>Panel data</h1>
+<ul>
+<li class="fragment">Consistent if <span class="math inline">\(L,N \rightarrow \infty\)</span> and even if <span class="math inline">\(N = 1,\; T \rightarrow \infty\)</span>.</li>
+<li class="fragment">Unit fixed effects purge time-invariant unobservable 👍</li>
+<li class="fragment">But remove the time-invariant part of the shocks only if shares are time invariant 👎</li>
+<li class="fragment">Time FEs purge period-specific unobservables only if exposure shares add up to one. Otherwise, one must interacts period FEs with sum of exposures shares <span class="math inline">\(S_l\)</span></li>
+<li class="fragment">In any case, one may want to use a first-difference in both observations and shocks specification to account for shock fixed effect and maximizing first stage: <span class="math display">\[
+\Delta y_{lt} = \beta \Delta x_{lt} + \Delta w_{lt}&#39; \gamma + \Delta\varepsilon_{lt}
+\]</span> With <span class="math display">\[
+z_{lt, FD} = \sum_n s_{ln, t-1}\Delta g_{nt}
+\]</span></li>
+</ul>
+</section>
+
+<section id="inference" class="title-slide slide level1">
+<h1>Inference &amp; testing</h1>
+<ul>
+<li class="fragment"><strong>Proposition 5</strong>: The conventional heteroskedasticity-robust SE for <span class="math inline">\(\hat{\beta}\)</span> of the second stage equation <span class="math display">\[\bar{y}_n^\perp = \alpha + \beta \bar{x}_n^\perp + q&#39;_n \delta + \bar{\varepsilon}_n^\perp \tag{10}\]</span> is valid.</li>
+<li class="fragment">First stage F-stat obtained as squared t-stat. If multiple instruments look at Appendix A.10</li>
+<li class="fragment"><strong>Falsification test</strong>: One may regress a proxy <span class="math inline">\(r_l\)</span> for the unobserved residuals <span class="math inline">\(\varepsilon_l\)</span> on the instrument <span class="math inline">\(z_l\)</span>. Example of <span class="math inline">\(r_l\)</span> could be lagged observations of the outcome, or some characteristics realized prior to the shocks.</li>
+</ul>
+</section>
+
+<section id="ADH" class="title-slide slide level1">
+<h1>In practice</h1>
+<p>3 cases in the literature:</p>
+<ul>
+<li class="fragment">Set of shocks which is itself an instrument. For example, the <span class="math inline">\(g_n\)</span> in <span class="math inline">\(z_l\)</span> correspond to a set of observed growth rates that could be plausibly thought as being randomly assigned to many industries. Ex. ADH (2013)</li>
+<li class="fragment">Researcher does not directly observe a large set of shocks but can imagine an underlying set of <span class="math inline">\(g_n\)</span> that if observed, would be a useful instrument. Ex. Bartik <span class="citation" data-cites="bartik1991benefits">(1991)</span>, Card <span class="citation" data-cites="card2001immigrant">(2001)</span>, Card(2009)</li>
+<li class="fragment">The <span class="math inline">\(g_n\)</span> cannot be viewed as an instrument. Because either it is not possible that these shocks are randomly assigned, even conditionaly of shock-level observables, or because there are too few shocks. In this case, identification may follow from the exogeneity of the shares, as suggested by GPSS (2020)</li>
+</ul>
+</section>
+
+<section id="in-practice-blueprint" class="title-slide slide level1">
+<h1>In practice: blueprint</h1>
+<ol>
+<li>
+Narrative justification for the quasi random assignments of shocks (BHJ: 6.2.1)
+<ul>
+<li>
+Here you try to justify Assumption 1 &amp; 2. Assumption 3 &amp; 4 in the case of conditional quasi-random shocks. Assumption 5 or 6 instead of 4 in the case of serial correlation or cross correlation.
+</li>
+</ul>
+</li>
+<li>
+Compute properties of shocks and shares. (BHJ: Table 1)
+<ul>
+<li>
+Show moments of <span class="math inline">\(g_{nt}\)</span> weighted by <span class="math inline">\(s_{nt}\)</span>.
+</li>
+<li>
+Show inverse Herfindahl of weights, it is your <em>effective sample size</em>. You want it large.
+</li>
+</ul>
+</li>
+<li>
+Prove shocks are uncorrelated and choose the right clustering.
+<ul>
+<li>
+Read Mostly Harmless Econometrics <span class="citation" data-cites="angrist2008mostly">(2008)</span> Ch. 8.2 to find the right clustering level.
+</li>
+</ul>
+</li>
+<li>
+Falsification tests (BHJ: 6.2.3 + Table 3)
+<ul>
+<li>
+Regress potential proxies for residual on the instrument <span class="math inline">\(z_l\)</span>
+</li>
+<li>
+Regress potential industry level confounders on the shocks
+</li>
+<li>
+“Pre-trend” analysis using lagged outcome on the instrument
+</li>
+</ul>
+</li>
+</ol>
+</section>
+
+<section id="adh-setup" class="title-slide slide level1">
+<h1>ADH: Setup</h1>
+<p>Causal effect of rising import penetration from China on U.S. local labor market.</p>
+<ul>
+<li class="fragment">722 commuting zones <span class="math inline">\(l\)</span></li>
+<li class="fragment">397 manufacturing industries <span class="math inline">\(n\)</span></li>
+<li class="fragment">2 periods <span class="math inline">\(t\)</span>, 1990-2000 and 2000-2007</li>
+<li class="fragment"><span class="math inline">\(y_{lt}\)</span> change in total manufacturing employment as percentage of working-age population in <span class="math inline">\(l\)</span> at <span class="math inline">\(t\)</span>.</li>
+<li class="fragment"><span class="math inline">\(x_{lt}\)</span> local exposure to the growth of imports from China.</li>
+<li class="fragment"><span class="math inline">\(w_{lt}\)</span> start-of-period measures of labor force demographics, period FEs, Region FEs, start-of-period total manufacturing share.</li>
+</ul>
+</section>
+
+<section id="adh-justification" class="title-slide slide level1">
+<h1>ADH: Justification</h1>
+<p>An ideal experiment would generate random variation in the growth of imports from China across industries. One could imagine random variation in industry-specific productivities in China. This would yield a set of observed productivity change that could satisfy <strong>Assumption 1</strong>.</p>
+<p><strong>Assumption 2</strong> would require that shocks are idiosyncratic along many industries <span class="math inline">\(n\)</span>, with small average exposure to each shocks across commuting zones <span class="math inline">\(l\)</span>.</p>
+<blockquote>
+<p><small> ⚠ However one could argue that shocks are still non random (think China’s factor endowment biased toward low-skill industries which could have different employment trend). -&gt; Use falsification tests.</small></p>
+</blockquote>
+</section>
+
+<section id="adh-shocks-and-shares" class="title-slide slide level1">
+<h1>ADH: Shocks and shares</h1>
+<iframe data-src="https://arxiv.org/pdf/1806.01221.pdf#page=36&amp;pagemode=none&amp;zoom=page-width" width="100%" height="600px">
+</iframe>
+</section>
+
+<section id="adh-clustering" class="title-slide slide level1">
+<h1>ADH: Clustering</h1>
+<iframe data-src="https://arxiv.org/pdf/1806.01221.pdf#page=37&amp;pagemode=none&amp;zoom=page-width" width="100%" height="600px">
+</iframe>
+</section>
+
+<section id="adh-falsification" class="title-slide slide level1">
+<h1>ADH: Falsification</h1>
+<iframe data-src="https://arxiv.org/pdf/1806.01221.pdf#page=38&amp;pagemode=none&amp;zoom=page-width" width="100%" height="600px">
+</iframe>
+</section>
+
+<section id="adh-estimate" class="title-slide slide level1">
+<h1>ADH: Estimate</h1>
+<iframe data-src="https://arxiv.org/pdf/1806.01221.pdf#page=39&amp;pagemode=none&amp;zoom=page-width" width="100%" height="600px">
+</iframe>
+</section>
+
+<section id="toolbox" class="title-slide slide level1">
+<h1>Toolbox</h1>
+<ul>
+<li><code>ssaggregate</code> on Stata which constructs <span class="math inline">\(\bar{y}_n^\perp,\; \bar{x}_n^\perp\)</span> and <span class="math inline">\(s_n\)</span>.
+<ul>
+<li>~ 170 lines of code, so it should be implemented quickly in any other language. (This is a sidenote for me)</li>
+</ul></li>
+<li><a href="https://github.com/borusyak/shift-share">Reproducing code</a></li>
+</ul>
+</section>
+
+<section id="thanks" class="title-slide slide level1">
+<h1>Thanks!</h1>
+
+</section>
+
+<section id="references" class="title-slide slide level1">
+<h1>References</h1>
+<p><a href="https://www.google.com/url?q=https%3A%2F%2Fwww.dropbox.com%2Fs%2Fbqqkvvxe27e5mya%2Fshiftshare.pdf%3Fraw%3D1&amp;sa=D&amp;sntz=1&amp;usg=AFQjCNGkKSUW0OlCM1f_Vn2XXW7mx9g-4A">Kirill Boryusak UCL Slides, that he himself borrowed from Peter Hull</a></p>
+<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-angrist2008mostly" class="csl-entry" role="doc-biblioentry">
+Angrist, Joshua D, and Jörn-Steffen Pischke. 2008. <em>Mostly Harmless Econometrics: An Empiricist’s Companion</em>. Princeton university press.
+</div>
+<div id="ref-bartik1991benefits" class="csl-entry" role="doc-biblioentry">
+Bartik, Timothy J. 1991. <span>“Who Benefits from State and Local Economic Development Policies?”</span>
+</div>
+<div id="ref-card2001immigrant" class="csl-entry" role="doc-biblioentry">
+Card, David. 2001. <span>“Immigrant Inflows, Native Outflows, and the Local Labor Market Impacts of Higher Immigration.”</span> <em>Journal of Labor Economics</em> 19 (1): 22–64.
+</div>
+<div id="ref-goldsmith2020bartik" class="csl-entry" role="doc-biblioentry">
+Goldsmith-Pinkham, Paul, Isaac Sorkin, and Henry Swift. 2020. <span>“Bartik Instruments: What, When, Why, and How.”</span> <em>American Economic Review</em> 110 (8): 2586–2624.
+</div>
+</div>
+</section>
+    </div>
+  </div>
+
+  <script src="slides_files/reveal.js-4.1/dist/reveal.js"></script>
+  <script src="slides_files/reveal.js-4.1/plugin/chalkboard/plugin.js"></script>
+  <script src="slides_files/reveal.js-4.1/plugin/menu/menu.js"></script>
+
+	<script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+				// Display the page number of the current slide
+				// - true:    Show slide number
+				// - false:   Hide slide number
+				//
+				// Can optionally be set as a string that specifies the number formatting:
+				// - "h.v":   Horizontal . vertical slide number (default)
+				// - "h/v":   Horizontal / vertical slide number
+				// - "c":   Flattened slide number
+				// - "c/t":   Flattened slide number / total slides
+				//
+				// Alternatively, you can provide a function that returns the slide
+				// number for the current slide. The function should take in a slide
+				// object and return an array with one string [slideNumber] or
+				// three strings [n1,delimiter,n2]. See #formatSlideNumber().
+				slideNumber: true,
+				// Vertical centering of slides
+				center: false,
+				// The "normal" size of the presentation, aspect ratio will
+				// be preserved when the presentation is scaled to fit different
+				// resolutions. Can be specified using percentage units.
+				width: 1280,
+				height: 720,
+				// Optional reveal.js plugins
+				plugins: [
+                  
+                  
+                   RevealChalkboard,
+                   RevealMenu,
+                  
+                  
+                  
+                  
+				          ],
+				menu: {
+					custom: false,
+					themes: false,
+					transitions: true
+					},
+
+        	chalkboard: {
+          	theme: 'whiteboard',
+					},
+					keyboard: {
+						67: function() { RevealChalkboard.toggleNotesCanvas() },    // toggle notes canvas when 'c' is pressed
+						66: function() { RevealChalkboard.toggleChalkboard() }, // toggle chalkboard when 'b' is pressed
+						46: function() { RevealChalkboard.clear() },    // clear chalkboard when 'DEL' is pressed
+						8: function() { RevealChalkboard.reset() },    // reset chalkboard data on current slide when 'BACKSPACE' is pressed
+						68: function() { RevealChalkboard.download() }, // downlad recorded chalkboard drawing when 'd' is pressed
+					},
+});
+    </script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+
+  </body>
+</html>
